@@ -58,7 +58,7 @@
             android:layout_height="70dp"
             android:background="@color/default_But"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewPair"
             app:strokeColor="@color/teal_700"
             app:strokeWidth="3dp" />
 

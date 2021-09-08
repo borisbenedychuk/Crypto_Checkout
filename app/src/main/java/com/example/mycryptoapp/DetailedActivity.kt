@@ -2,13 +2,19 @@ package com.example.mycryptoapp
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
@@ -24,6 +30,7 @@ class DetailedActivity : AppCompatActivity() {
     private lateinit var textViewMax: TextView
     private lateinit var imageView: ImageView
     private lateinit var buttonEvents: Button
+    private lateinit var linearLayout: LinearLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +43,12 @@ class DetailedActivity : AppCompatActivity() {
         textViewMin = findViewById(R.id.textViewMinDet)
         textViewMax = findViewById(R.id.textViewMaxDet)
         imageView = findViewById(R.id.imageView2)
+        linearLayout = findViewById(R.id.ll_DA)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            linearLayout.orientation = LinearLayout.HORIZONTAL
+        } else {
+            linearLayout.orientation = LinearLayout.VERTICAL
+        }
         buttonEvents = findViewById(R.id.eventsButton_DA)
         viewmodel = ViewModelProvider(this)[CoinViewModel::class.java]
         if (intent.hasExtra(FROM_SYMBOL)) {

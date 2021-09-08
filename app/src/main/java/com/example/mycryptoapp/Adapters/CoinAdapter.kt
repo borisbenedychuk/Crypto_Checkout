@@ -34,9 +34,11 @@ class CoinAdapter(context: Context) : RecyclerView.Adapter<CoinAdapter.CoinViewH
 
     override fun onBindViewHolder(holder: CoinViewHolder, position: Int) {
         val coinDetailedInfoByCoins = list[position]
-        holder.textViewPair.text = "${coinDetailedInfoByCoins.fromsymbol}/${coinDetailedInfoByCoins.tosymbol}"
-        holder.textViewPrice.text = (DecimalFormat("#0.00").format(coinDetailedInfoByCoins.price)).toString() + "$"
-        holder.textView24hVol.text = "24Hour vol: " + (DecimalFormat("#0.00").format(coinDetailedInfoByCoins.volume24hourto/100000000).toString()) + "B US$"
+        holder.textViewPair.text = String.format(
+            "%s/%s", coinDetailedInfoByCoins.fromsymbol, coinDetailedInfoByCoins.tosymbol
+        )
+        holder.textViewPrice.text = String.format("%s $", DecimalFormat("#0.00").format(coinDetailedInfoByCoins.price))
+        holder.textView24hVol.text = String.format("24Hour vol: %s B US$",DecimalFormat("#0.00").format(coinDetailedInfoByCoins.volume24hourto/100000000))
         Picasso.get().load(coinDetailedInfoByCoins.getFullImageUrl()).into(holder.imageViewIcon)
         holder.itemView.setOnClickListener {
             onCoinCliCkListener?.onCoinClick(coinDetailedInfoByCoins)
