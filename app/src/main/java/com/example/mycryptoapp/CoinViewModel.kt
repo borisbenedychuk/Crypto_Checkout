@@ -9,14 +9,12 @@ import com.example.mycryptoapp.API.BasicInfoAPIServices
 import com.example.mycryptoapp.Database.DatabasBasicInfo.Database
 import com.example.mycryptoapp.Pojos.BasicInfoPojos.CoinDetailedInfoByCoins
 import com.example.mycryptoapp.Pojos.NewsPojos.CoinCred.CoinCred
-import com.example.mycryptoapp.Pojos.NewsPojos.NewsRequest.CoinEvent
+import com.example.mycryptoapp.utils.Utils.credList
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 class CoinViewModel(application: Application) : AndroidViewModel(application) {
@@ -27,7 +25,6 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
     fun getCoin(fSym: String) =
         db.coinInfoDao().getDetailedCoin(fSym)
 
-    var coinCredsList = listOf<CoinCred>()
     var isHot = MutableLiveData(false)
 
     fun getEventsByCoin (fSym: String) = db.coinInfoDao().getCoinWithNews(fsym = fSym)
@@ -42,7 +39,7 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
                     Log.d("Test_coin_creds", "problems with request")
                 }
                 list?.let {
-                    coinCredsList = it
+                    credList.addAll(it)
                 }
             }
         compositeDisposable.add(disposable)
@@ -50,8 +47,8 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun isHot (coinSymbol: String) {
-        if (coinCredsList.isNotEmpty()) {
-            for (coinCred in coinCredsList) {
+        if (credList.isNotEmpty()) {
+            for (coinCred in credList) {
                 if (coinCred.symbol == coinSymbol) {
                     isHot.value = coinCred.isNew
                 }
@@ -59,31 +56,36 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun loadCoinNews (coinSymbol: String) {
-        if (coinCredsList.isNotEmpty()) {
-            for (coinCred in coinCredsList) {
+    fun loadCoinEvents (coinSymbol: String) {
+        Log.d("Test_News_Api", credList.size.toString())
+        if (credList.isNotEmpty()) {
+            for (coinCred in credList) {
                 if (coinCred.symbol == coinSymbol) {
-                    loadNews(coinCred)
+                    loadEvents(coinCred)
                 }
             }
         }
 
     }
 
-    private fun loadNews (coinCred: CoinCred) {
+    private fun loadEvents (coinCred: CoinCred) {
         val disposable = APIFactory.newsAPIService
             .getNewsByCoin(coinCred.id!!)
             .subscribeOn(Schedulers.io())
-            .map { it.map { it.symb = coinCred.symbol.toString() } as List<CoinEvent>}
             .subscribe { list, throwable ->
                 throwable?.let {
                     Log.d("Test_News_Api" , throwable.message!!)
                 }
                 list?.let {
+                    it.map {
+                        it.symb = coinCred.symbol
+                    }
+                    Log.d("Test_News_Api", "Im in last call!")
                     db.coinInfoDao().deleteCoinEvents(coinCred.symbol!!)
                     db.coinInfoDao().insertCoinEvents(it)
                 }
             }
+        compositeDisposable.add(disposable)
     }
 
     fun loadDataFirst() {

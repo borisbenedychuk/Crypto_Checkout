@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "events")
 data class CoinEvent (
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val idAG: Int,
 
     var symb: String? = null,
 

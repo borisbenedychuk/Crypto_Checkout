@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
@@ -23,6 +25,7 @@ class DetailedActivity : AppCompatActivity() {
     private lateinit var textViewMin: TextView
     private lateinit var textViewMax: TextView
     private lateinit var imageView: ImageView
+    private lateinit var newTextView: TextView
 
 
 
@@ -36,8 +39,8 @@ class DetailedActivity : AppCompatActivity() {
         textViewMin = findViewById(R.id.textViewMinDet)
         textViewMax = findViewById(R.id.textViewMaxDet)
         imageView = findViewById(R.id.imageView2)
+        newTextView = findViewById(R.id.tvNew_DA)
         viewmodel = ViewModelProvider(this)[CoinViewModel::class.java]
-        var intentGet = intent
         var fSymb: String? = null
         if (intent.hasExtra(FROM_SYMBOL)) {
             fSymb = intent.getStringExtra(FROM_SYMBOL)
@@ -47,13 +50,12 @@ class DetailedActivity : AppCompatActivity() {
             return
         }
         viewmodel.isHot(fSymb)
-
-        viewmodel.loadCoinNews(fSymb)
+        viewmodel.loadCoinEvents(fSymb)
         viewmodel.isHot.observe(this) {
             if (it) {
-
+                newTextView.visibility = View.VISIBLE
             } else {
-
+                newTextView.visibility = View.GONE
             }
         }
         viewmodel.getCoin(fSymb).observe(this) {
@@ -66,9 +68,9 @@ class DetailedActivity : AppCompatActivity() {
             Picasso.get().load(it.getFullImageUrl()).into(imageView)
         }
         viewmodel.getEventsByCoin(fSymb).observe(this) {
-            val list = it.map { it.events }
+            val list = it.flatMap { it.events }
             if (list.isNotEmpty()) {
-                Log.d("Test_relation_db", "Success")
+                Log.d("Test_Room_Relational" , list.toString())
             }
         }
     }

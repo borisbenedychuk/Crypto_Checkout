@@ -3,7 +3,7 @@ package com.example.mycryptoapp.Pojos.BasicInfoPojos
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.mycryptoapp.API.APIFactory
-import com.example.mycryptoapp.utils.getCurrentTime
+import com.example.mycryptoapp.utils.Utils
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -191,6 +191,6 @@ data class CoinDetailedInfoByCoins (
     @Expose
     val imageurl: String? = null,
 ) {
-    fun getNormalTime () = getCurrentTime(lastupdate)
+    fun getNormalTime () = Utils.getCurrentTime(lastupdate)
     fun getFullImageUrl () = APIFactory.BASE_IMAGE_URL + imageurl
 }

@@ -12,4 +12,5 @@
     <string name="strategy_call">Strategy call:</string>
     <string name="description_default">No details for now</string>
     <string name="call_default">No Call</string>
+    <string name="new_coin">New</string>
 </resources>
