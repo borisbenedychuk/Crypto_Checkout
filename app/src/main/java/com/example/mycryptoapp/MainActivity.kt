@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(CoinViewModel::class.java)
         viewModel.loadDataFirst()
         viewModel.loadData()
+        viewModel.getCoinCreds()
         viewModel.priceList.observe(this) {
             coinAdapter.list = it
         }

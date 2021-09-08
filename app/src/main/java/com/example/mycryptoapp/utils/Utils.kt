@@ -1,5 +1,6 @@
 package com.example.mycryptoapp.utils
 
+import com.example.mycryptoapp.Pojos.NewsPojos.CoinCred.CoinCred
 import java.sql.Date
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -13,3 +14,4 @@ fun getCurrentTime (timeStamp: Long): String {
     sdf.timeZone = TimeZone.getDefault()
     return sdf.format(date)
 }
+

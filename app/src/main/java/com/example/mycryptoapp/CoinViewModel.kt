@@ -3,14 +3,19 @@ package com.example.mycryptoapp
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.example.mycryptoapp.API.APIFactory
 import com.example.mycryptoapp.API.BasicInfoAPIServices
 import com.example.mycryptoapp.Database.DatabasBasicInfo.Database
 import com.example.mycryptoapp.Pojos.BasicInfoPojos.CoinDetailedInfoByCoins
+import com.example.mycryptoapp.Pojos.NewsPojos.CoinCred.CoinCred
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 class CoinViewModel(application: Application) : AndroidViewModel(application) {
@@ -21,6 +26,25 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
     fun getCoin(fSym: String) =
         db.coinInfoDao().getDetailedCoin(fSym)
 
+    var coinCredsList = listOf<CoinCred>()
+    var listPresence = MutableLiveData<Boolean> (false)
+
+    fun getCoinCreds () {
+        val disposable = APIFactory.newsAPIService
+            .getAvailableCoins()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { list, throwable ->
+                throwable?.let {
+                    Log.d("Test_coin_creds", "problems with request")
+                }
+                list?.let {
+                    coinCredsList = it
+                    listPresence.value = true
+                }
+            }
+
+    }
 
     fun loadDataFirst() {
         apiServices = APIFactory.basicInfoAPIServices
@@ -57,6 +81,7 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
             })
         compositeDisposable.add(disposable)
     }
+
 
 
 
