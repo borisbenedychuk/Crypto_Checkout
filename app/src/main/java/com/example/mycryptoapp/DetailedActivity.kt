@@ -3,18 +3,13 @@ package com.example.mycryptoapp
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
@@ -56,11 +51,11 @@ class DetailedActivity : AppCompatActivity() {
             fSymb?.let {
                 viewmodel.setCoin(it)
             }
-            viewmodel.getCoinLiveData().observe(this) {
-                it.let {
+            viewmodel.getCoinLiveData().observe(this) { str ->
+                str.let {
                     viewmodel.loadCoinEvents()
-                    viewmodel.getCoinWithEvents().observe(this) {
-                        it.coinDetailedInfoByCoins.also {
+                    viewmodel.getCoinWithEvents().observe(this) { coinWithEvents ->
+                        coinWithEvents.coinDetailedInfoByCoins.also {
                             textViewFullName.text = it.fromsymbol
                             textView24HourChange.text = String.format("%s US$", DecimalFormat("#0.00").format(it.change24hour).toString() )
                             textView24HourVol.text = String.format("%s US$",
@@ -73,7 +68,7 @@ class DetailedActivity : AppCompatActivity() {
                                 DecimalFormat("#0.00").format(it.low24hour))
                             Picasso.get().load(it.getFullImageUrl()).into(imageView)
                         }
-                        val list = it.events.filter {
+                        val list = coinWithEvents.events.filter {
                             it.date?.substringBefore("-")?.toInt()!! > 2020
                         }
                         if (list.isNotEmpty()) {

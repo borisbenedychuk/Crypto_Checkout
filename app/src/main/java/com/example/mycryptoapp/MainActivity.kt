@@ -1,16 +1,10 @@
 package com.example.mycryptoapp
 
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.FileUtils
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
-import androidx.core.view.size
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
