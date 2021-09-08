@@ -23,7 +23,6 @@ class DetailedActivity : AppCompatActivity() {
     private lateinit var textViewMin: TextView
     private lateinit var textViewMax: TextView
     private lateinit var imageView: ImageView
-    private lateinit var newTV: TextView
     private lateinit var buttonEvents: Button
 
 
@@ -38,7 +37,6 @@ class DetailedActivity : AppCompatActivity() {
         textViewMax = findViewById(R.id.textViewMaxDet)
         imageView = findViewById(R.id.imageView2)
         buttonEvents = findViewById(R.id.eventsButton_DA)
-        newTV = findViewById(R.id.tvNew_DA)
         viewmodel = ViewModelProvider(this)[CoinViewModel::class.java]
         if (intent.hasExtra(FROM_SYMBOL)) {
             val fSymb = intent.getStringExtra(FROM_SYMBOL)

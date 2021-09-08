@@ -39,7 +39,7 @@ class RVEventsAdapter: RecyclerView.Adapter<RVEventsAdapter.RVEventsViewHolder>(
     override fun onBindViewHolder(holder: RVEventsViewHolder, position: Int) {
         val coinEvent = listOfEvents[position]
         holder.eventTitle.text = coinEvent.name
-        holder.eventDate.text = coinEvent.date?.substringBefore("T")?.replace("-",".")
+        holder.eventDate.text = Utils.convertDateFormat(coinEvent.date!!)
         holder.cardView.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(coinEvent.link))
             onItemClickListener?.onItemClick(intent)

@@ -107,7 +107,7 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
             .flatMap { APIFactory.basicInfoAPIServices.getCoinListDetailedInfo(fSyms = it) }
             .map { it.coinDetailedInfo }
             .map { with(it) { getListOfDetailedCoinsFromJson(it) } }
-            .delay(1, TimeUnit.SECONDS)
+            .delay(10, TimeUnit.SECONDS)
             .repeat()
             .retry()
             .subscribeOn(Schedulers.io())

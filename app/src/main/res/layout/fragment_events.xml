@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:minWidth="300dp"
+    android:minWidth="350dp"
     android:layout_height="match_parent"
     android:background="@color/teal_700"
     android:orientation="vertical"
@@ -11,11 +11,13 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
         android:fontFamily="@font/bebas"
         android:text="@string/events"
         android:textColor="@color/default_But"
-        android:textSize="48sp" />
+        android:textSize="48sp"
+        android:layout_marginStart="20dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_Events_fr_DA"

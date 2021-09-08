@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
-    app:cardCornerRadius="30dp"
+    app:cardBackgroundColor="@color/default_But"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
@@ -14,23 +14,26 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="15dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_EventTitle_fr_DA"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/bebas"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textColor="@color/teal_700"
+            android:textSize="24sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_Date_fr_DA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:fontFamily="@font/bebas"
             android:layout_gravity="end"
-            />
+            android:fontFamily="@font/bebas"
+            android:padding="10dp"
+            android:textColor="@color/teal_700" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
