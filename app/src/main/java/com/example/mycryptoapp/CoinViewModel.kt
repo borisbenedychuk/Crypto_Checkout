@@ -3,6 +3,7 @@ package com.example.mycryptoapp
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.mycryptoapp.API.APIFactory
 import com.example.mycryptoapp.API.BasicInfoAPIServices
@@ -22,10 +23,15 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var apiServices: BasicInfoAPIServices
     private val db = Database.getInstance(application)
     var priceList = db.coinInfoDao().getListOfDetailedCoins()
+    private var coinLiveData = MutableLiveData<String>()
 
-    var isHot = MutableLiveData(false)
+    fun setCoin (fSym: String) {
+        coinLiveData.value = fSym
+    }
 
-    fun getCoinWithEvents (fSym: String) = db.coinInfoDao().getCoinWithNews(fsym = fSym)
+    fun getCoinLiveData (): LiveData<String> = coinLiveData
+
+    fun getCoinWithEvents () = db.coinInfoDao().getCoinWithNews(coinLiveData.value!!)
 
     fun getCoinCreds () {
         val disposable = APIFactory.newsAPIService
@@ -44,21 +50,12 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun isHot (coinSymbol: String) {
-        if (credList.isNotEmpty()) {
-            for (coinCred in credList) {
-                if (coinCred.symbol == coinSymbol) {
-                    isHot.value = coinCred.isNew
-                }
-            }
-        }
-    }
 
-    fun loadCoinEvents (coinSymbol: String) {
+    fun loadCoinEvents () {
         Log.d("Test_News_Api", credList.size.toString())
         if (credList.isNotEmpty()) {
             for (coinCred in credList) {
-                if (coinCred.symbol == coinSymbol) {
+                if (coinCred.symbol == coinLiveData.value) {
                     loadEvents(coinCred)
                 }
             }

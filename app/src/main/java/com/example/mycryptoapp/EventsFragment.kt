@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mycryptoapp.Adapters.RVEventsAdapter
 
 
-class EventsFragment(fSym: String) : DialogFragment(R.layout.fragment_events) {
+class EventsFragment() : DialogFragment(R.layout.fragment_events) {
 
     private lateinit var eventsRecyclerView: RecyclerView
     private lateinit var viewModel: CoinViewModel
     private lateinit var adapter: RVEventsAdapter
-    private val fsym = fSym
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,10 +25,12 @@ class EventsFragment(fSym: String) : DialogFragment(R.layout.fragment_events) {
         adapter = RVEventsAdapter()
         eventsRecyclerView.layoutManager = LinearLayoutManager(view.context)
         eventsRecyclerView.adapter = adapter
-        viewModel.getCoinWithEvents(fsym).observe(viewLifecycleOwner) {
-            adapter.listOfEvents = it.events.filter {
-                it.date?.substringBefore("-")?.toInt()!! > 2020
-            }.sortedByDescending { it.date }
+        viewModel.getCoinWithEvents().observe(viewLifecycleOwner) {
+            it?.let {
+                adapter.listOfEvents = it.events.filter {
+                    it.date?.substringBefore("-")?.toInt()!! > 2020
+                }.sortedByDescending { it.date }
+            }
         }
         adapter.onItemClickListener = object : RVEventsAdapter.OnItemClickListener {
             override fun onItemClick(intent: Intent) {
