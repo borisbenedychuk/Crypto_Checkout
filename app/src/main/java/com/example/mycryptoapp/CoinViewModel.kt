@@ -9,6 +9,7 @@ import com.example.mycryptoapp.API.BasicInfoAPIServices
 import com.example.mycryptoapp.Database.DatabasBasicInfo.Database
 import com.example.mycryptoapp.Pojos.BasicInfoPojos.CoinDetailedInfoByCoins
 import com.example.mycryptoapp.Pojos.NewsPojos.CoinCred.CoinCred
+import com.example.mycryptoapp.Pojos.NewsPojos.NewsRequest.CoinEvent
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,7 +28,9 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
         db.coinInfoDao().getDetailedCoin(fSym)
 
     var coinCredsList = listOf<CoinCred>()
-    var listPresence = MutableLiveData<Boolean> (false)
+    var isHot = MutableLiveData(false)
+
+    fun getEventsByCoin (fSym: String) = db.coinInfoDao().getCoinWithNews(fsym = fSym)
 
     fun getCoinCreds () {
         val disposable = APIFactory.newsAPIService
@@ -40,10 +43,47 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 list?.let {
                     coinCredsList = it
-                    listPresence.value = true
                 }
             }
+        compositeDisposable.add(disposable)
 
+    }
+
+    fun isHot (coinSymbol: String) {
+        if (coinCredsList.isNotEmpty()) {
+            for (coinCred in coinCredsList) {
+                if (coinCred.symbol == coinSymbol) {
+                    isHot.value = coinCred.isNew
+                }
+            }
+        }
+    }
+
+    fun loadCoinNews (coinSymbol: String) {
+        if (coinCredsList.isNotEmpty()) {
+            for (coinCred in coinCredsList) {
+                if (coinCred.symbol == coinSymbol) {
+                    loadNews(coinCred)
+                }
+            }
+        }
+
+    }
+
+    private fun loadNews (coinCred: CoinCred) {
+        val disposable = APIFactory.newsAPIService
+            .getNewsByCoin(coinCred.id!!)
+            .subscribeOn(Schedulers.io())
+            .map { it.map { it.symb = coinCred.symbol.toString() } as List<CoinEvent>}
+            .subscribe { list, throwable ->
+                throwable?.let {
+                    Log.d("Test_News_Api" , throwable.message!!)
+                }
+                list?.let {
+                    db.coinInfoDao().deleteCoinEvents(coinCred.symbol!!)
+                    db.coinInfoDao().insertCoinEvents(it)
+                }
+            }
     }
 
     fun loadDataFirst() {
@@ -52,7 +92,7 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
             .map { it.data?.map { it?.coinInfo?.name }!!.joinToString(",") }
             .flatMap { APIFactory.basicInfoAPIServices.getCoinListDetailedInfo(fSyms = it) }
             .map { it.coinDetailedInfo }
-            .map { with(it) { getListOfDetailedCoinsFromJson(it) } }
+            .map { getListOfDetailedCoinsFromJson(it)  }
             .subscribeOn(Schedulers.io())
             .subscribe({
                 db.coinInfoDao().deleteCoins()

@@ -4,9 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.mycryptoapp.Pojos.BasicInfoPojos.CoinDetailedInfoByCoins
+import com.example.mycryptoapp.Pojos.NewsPojos.NewsRequest.CoinEvent
 
 
-@androidx.room.Database(entities = [CoinDetailedInfoByCoins::class], version = 14, exportSchema = false)
+@androidx.room.Database(entities = [CoinDetailedInfoByCoins::class, CoinEvent::class], version = 15, exportSchema = false)
 abstract class Database : RoomDatabase() {
     companion object {
         private var db: Database? = null

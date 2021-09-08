@@ -3,6 +3,7 @@ package com.example.mycryptoapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -45,6 +46,16 @@ class DetailedActivity : AppCompatActivity() {
             finish()
             return
         }
+        viewmodel.isHot(fSymb)
+
+        viewmodel.loadCoinNews(fSymb)
+        viewmodel.isHot.observe(this) {
+            if (it) {
+
+            } else {
+
+            }
+        }
         viewmodel.getCoin(fSymb).observe(this) {
             textViewFullName.text = it.fromsymbol
             textView24HourChange.text = DecimalFormat("#0.00").format(it.change24hour).toString() + " US$"
@@ -53,6 +64,12 @@ class DetailedActivity : AppCompatActivity() {
             textViewMax.text = DecimalFormat("#0.00").format(it.high24hour).toString()+ " US$"
             textViewMin.text = DecimalFormat("#0.00").format(it.low24hour).toString()+ " US$"
             Picasso.get().load(it.getFullImageUrl()).into(imageView)
+        }
+        viewmodel.getEventsByCoin(fSymb).observe(this) {
+            val list = it.map { it.events }
+            if (list.isNotEmpty()) {
+                Log.d("Test_relation_db", "Success")
+            }
         }
     }
 

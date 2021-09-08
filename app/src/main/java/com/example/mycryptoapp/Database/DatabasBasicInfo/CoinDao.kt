@@ -1,11 +1,10 @@
 package com.example.mycryptoapp.Database.DatabasBasicInfo
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.mycryptoapp.Pojos.BasicInfoPojos.CoinDetailedInfoByCoins
+import com.example.mycryptoapp.Pojos.NewsPojos.NewsRequest.CoinEvent
+import com.example.mycryptoapp.Pojos.NewsPojos.NewsRequest.CoinWithEvents
 
 
 @Dao
@@ -21,4 +20,15 @@ interface CoinDao {
 
     @Query("DELETE FROM coins")
     fun deleteCoins ()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCoinEvents  (list: List <CoinEvent>)
+
+    @Query("DELETE FROM events WHERE symb = :symb")
+    fun deleteCoinEvents (symb: String)
+
+    @Transaction
+    @Query("SELECT * FROM coins WHERE fromsymbol = :fsym")
+    fun getCoinWithNews (fsym: String): LiveData<List<CoinWithEvents>>
+
 }
