@@ -9,6 +9,9 @@
         <entry key="..\:/AndroidStudioProjects/MyCryptoApp/app/src/main/res/layout/activity_main.xml" value="0.19583333333333333" />
         <entry key="..\:/AndroidStudioProjects/MyCryptoApp/app/src/main/res/layout/activity_news.xml" value="0.35688405797101447" />
         <entry key="..\:/AndroidStudioProjects/MyCryptoApp/app/src/main/res/layout/coin_item.xml" value="0.19583333333333333" />
+        <entry key="..\:/AndroidStudioProjects/MyCryptoApp/app/src/main/res/layout/events_item_fr_da.xml" value="0.36666666666666664" />
+        <entry key="..\:/AndroidStudioProjects/MyCryptoApp/app/src/main/res/layout/fr_events_da.xml" value="0.36666666666666664" />
+        <entry key="..\:/AndroidStudioProjects/MyCryptoApp/app/src/main/res/layout/fragment_events.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

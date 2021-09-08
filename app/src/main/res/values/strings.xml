@@ -13,4 +13,6 @@
     <string name="description_default">No details for now</string>
     <string name="call_default">No Call</string>
     <string name="new_coin">New</string>
+    <string name="no_news">No Fresh Events</string>
+    <string name="events">Events</string>
 </resources>

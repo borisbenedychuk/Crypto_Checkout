@@ -3,11 +3,10 @@ package com.example.mycryptoapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
@@ -25,7 +24,8 @@ class DetailedActivity : AppCompatActivity() {
     private lateinit var textViewMin: TextView
     private lateinit var textViewMax: TextView
     private lateinit var imageView: ImageView
-    private lateinit var newTextView: TextView
+    private lateinit var newTV: TextView
+    private lateinit var buttonEvents: Button
 
 
 
@@ -39,7 +39,8 @@ class DetailedActivity : AppCompatActivity() {
         textViewMin = findViewById(R.id.textViewMinDet)
         textViewMax = findViewById(R.id.textViewMaxDet)
         imageView = findViewById(R.id.imageView2)
-        newTextView = findViewById(R.id.tvNew_DA)
+        buttonEvents = findViewById(R.id.eventsButton_DA)
+        newTV = findViewById(R.id.tvNew_DA)
         viewmodel = ViewModelProvider(this)[CoinViewModel::class.java]
         var fSymb: String? = null
         if (intent.hasExtra(FROM_SYMBOL)) {
@@ -53,26 +54,38 @@ class DetailedActivity : AppCompatActivity() {
         viewmodel.loadCoinEvents(fSymb)
         viewmodel.isHot.observe(this) {
             if (it) {
-                newTextView.visibility = View.VISIBLE
+                newTV.visibility = View.VISIBLE
             } else {
-                newTextView.visibility = View.GONE
+                newTV.visibility = View.GONE
             }
         }
-        viewmodel.getCoin(fSymb).observe(this) {
-            textViewFullName.text = it.fromsymbol
-            textView24HourChange.text = DecimalFormat("#0.00").format(it.change24hour).toString() + " US$"
-            textView24HourVol.text = DecimalFormat("#0.00").format(it.volume24hourto/100_000_000).toString() + "B US$"
-            textViewPrice.text = DecimalFormat("#0.00").format(it.price).toString()+ " US$"
-            textViewMax.text = DecimalFormat("#0.00").format(it.high24hour).toString()+ " US$"
-            textViewMin.text = DecimalFormat("#0.00").format(it.low24hour).toString()+ " US$"
-            Picasso.get().load(it.getFullImageUrl()).into(imageView)
-        }
-        viewmodel.getEventsByCoin(fSymb).observe(this) {
-            val list = it.flatMap { it.events }
+        viewmodel.getCoinWithEvents(fSymb).observe(this) {
+            val coin = it.coinDetailedInfoByCoins.also {
+                textViewFullName.text = it.fromsymbol
+                textView24HourChange.text = DecimalFormat("#0.00").format(it.change24hour).toString() + " US$"
+                textView24HourVol.text = DecimalFormat("#0.00").format(it.volume24hourto/100_000_000).toString() + "B US$"
+                textViewPrice.text = DecimalFormat("#0.00").format(it.price).toString()+ " US$"
+                textViewMax.text = DecimalFormat("#0.00").format(it.high24hour).toString()+ " US$"
+                textViewMin.text = DecimalFormat("#0.00").format(it.low24hour).toString()+ " US$"
+                Picasso.get().load(it.getFullImageUrl()).into(imageView)
+            }
+            val list = it.events.filter {
+                it.date?.substringBefore("-")?.toInt()!! > 2020
+            }
             if (list.isNotEmpty()) {
-                Log.d("Test_Room_Relational" , list.toString())
+                buttonEvents.setOnClickListener {
+                    val dialogFragment = EventsFragment(fSymb)
+
+                    dialogFragment.show(supportFragmentManager, "events_dialog")
+                }
+            } else {
+                buttonEvents.setOnClickListener {
+                    buttonEvents.text = resources.getString(R.string.no_news)
+                }
             }
         }
+
+
     }
 
     companion object {

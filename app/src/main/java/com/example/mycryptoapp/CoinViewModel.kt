@@ -22,12 +22,10 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var apiServices: BasicInfoAPIServices
     private val db = Database.getInstance(application)
     var priceList = db.coinInfoDao().getListOfDetailedCoins()
-    fun getCoin(fSym: String) =
-        db.coinInfoDao().getDetailedCoin(fSym)
 
     var isHot = MutableLiveData(false)
 
-    fun getEventsByCoin (fSym: String) = db.coinInfoDao().getCoinWithNews(fsym = fSym)
+    fun getCoinWithEvents (fSym: String) = db.coinInfoDao().getCoinWithNews(fsym = fSym)
 
     fun getCoinCreds () {
         val disposable = APIFactory.newsAPIService

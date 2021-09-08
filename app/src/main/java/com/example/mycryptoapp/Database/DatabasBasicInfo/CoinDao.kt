@@ -12,9 +12,6 @@ interface CoinDao {
     @Query("SELECT * FROM coins ORDER BY volume24hourto DESC")
     fun getListOfDetailedCoins(): LiveData<List<CoinDetailedInfoByCoins>>
 
-    @Query("SELECT * FROM coins WHERE fromsymbol == :fsym")
-    fun getDetailedCoin(fsym: String): LiveData<CoinDetailedInfoByCoins>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertList(list: List<CoinDetailedInfoByCoins>)
 
@@ -29,6 +26,6 @@ interface CoinDao {
 
     @Transaction
     @Query("SELECT * FROM coins WHERE fromsymbol = :fsym")
-    fun getCoinWithNews (fsym: String): LiveData<List<CoinWithEvents>>
+    fun getCoinWithNews (fsym: String): LiveData<CoinWithEvents>
 
 }
